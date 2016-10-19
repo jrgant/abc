@@ -129,7 +129,7 @@ while(t <= N.populations){
 
 end_time <- Sys.time()
 (total_time <- end_time - start_time)
-# Time difference of 14.27762 mins
+# Time difference of 14.27762 mins (35.75432 mins using mv norm dist)
 
 # Cumulative number of data generation steps
 cumsum(data.gen.steps)
@@ -152,7 +152,7 @@ if(DO_PLOTTING){
             geom_histogram(bins = 20) +
             facet_grid(population ~ parameter)
     #output_plot
-    pdf('../output/figure_1b__s19.pdf')
+    pdf('../output/figure_1b.pdf')
     print(output_plot)
     dev.off()
 }

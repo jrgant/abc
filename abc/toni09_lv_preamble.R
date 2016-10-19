@@ -58,11 +58,13 @@ sse(sample_data[,c("x", "y")], true_soln[,c("x", "y")])
 
 # Plot the solution with sample points overlaid
 if (DO_PLOTTING){
+    png("../output/figure_1.png", width = 480, height = 480, res = 90)
     with(lv.df, plot(time, x, 
         col = 'grey', type = 'l', bty = 'n',
-        xlim = c(0, 15), ylim = c(0, 4)))
+        xlim = c(0, 15), ylim = c(0, 4), xlab = "", ylab = ""))
     with(lv.df, lines(time, y, col = 'black', type = 'l', lty = 2))
     
     with(sample_data, points(time, x, pch = 21, col = 'grey', cex = 0.7))
     with(sample_data, points(time, y, pch = 24, col = 'black', cex = 0.7))
+    dev.off()
 }
