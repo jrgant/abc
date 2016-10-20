@@ -3,7 +3,7 @@
 # It's not clear what to take as the proposal distribution ... ?
 # With some clever optimisation one could gen. the 1st popn outside the loop
 
-# Should plotting occur?  
+# Boolean for whether figures should be output/saved
 DO_PLOTTING <- TRUE
 
 set.seed(19)
@@ -11,8 +11,8 @@ set.seed(19)
 # Pull in the defined data, project functions, required packages
 source('toni09_lv_preamble.R')
 
-# Initialize epsilon values
-epsilons <- c(30.0, 16.0, 6.0, 5.0, 4.3)
+# Initialize epsilon values (first run through just saves points from the prior)
+epsilons <- c(Inf, 30.0, 16.0, 6.0, 5.0, 4.3)
 N.populations <- length(epsilons) # denoted T in Toni et al. (2009)
 
 # Number of particles
@@ -60,7 +60,7 @@ while(t <= N.populations){
             
             cat('.')
             if(t == 1){
-                theta_star_star <- runif(2, -10, 10)
+                theta_star_star <- runif(2, min = -10, max = 10)
                 names(theta_star_star) <- c("a", "b")
             }else{
                 # Sample a new theta_star from the previous popn
@@ -73,7 +73,6 @@ while(t <= N.populations){
                 theta_star_star <- rK(mean = theta_star, sigma = 0.25*diag(2))
                 names(theta_star_star) <- c("a", "b")
             }
-            
             # Need to wrap the above in a while look to make 
             # sure the parameters are appropriate: 
             # i.e. make sure pi(theta_star_star) > 0 
@@ -88,13 +87,15 @@ while(t <= N.populations){
             dfs <- as.data.frame(out)
             
             # Only proceed if lsoda didn't throw and error
-            if(NROW(dfs) == NROW(sample_data) + 1){
+            if(NROW(dfs) == (NROW(sample_data) + 1)){
+                
                 # Find the distance (sse) from the 
                 # simulated points to the data
-                x_star <- dfs[-1,c("x", "y")]
-                x0 <- sample_data[,c("x", "y")]
+                x_star <- dfs[-1, c("x", "y")]
+                x0 <- sample_data[, c("x", "y")]
                 
                 distance <- sse(x0, x_star)
+                
             }
         }
         
@@ -145,12 +146,37 @@ for (t in 1:N.populations){
 long.all.pop <- do.call(rbind, full)
 names(long.all.pop) <- c("particleID", "parameter", "estimate", "population")
 
+
 # Plot results?  
 if(DO_PLOTTING){
+    par(mfrow = c(length(epsilons), 2), mar = c(1,1,1,1))
+    axlimits <- list(c(-10, 10), c(-2, 3), c(0, 2), c(0.8, 1.4), c(0.8, 1.4), c(0.8, 1.4))
+    bxlimits <- list(c(-10, 10), c(-10, 10), c(0, 3.5), c(0.6, 1.5), c(0.6, 1.5), c(0.6, 1.4))
+    
+    bins <- c(10, 10, 10, 8, 5, 4)
+    for(i in 1:N.populations){
+        breaks <- bins[i]
+        for (p in c("a", "b")){
+            
+            if(p == "a"){
+                xlims <- axlimits[[i]]
+            }else{
+                xlims <- bxlimits[[i]]
+            }
+            
+            c1 <- with(long.all.pop, parameter == p)
+            c2 <- with(long.all.pop, population == i)
+                hist(long.all.pop[c1&c2,"estimate"], bty = 'n', 
+                    ylim = c(0, 400), xlim = xlims, 
+                    main = "", breaks = breaks)
+        }
+    }
+    
+    
     output_plot <- ggplot(long.all.pop, 
             aes(estimate, fill = factor(parameter))) + 
             geom_histogram(bins = 20) +
-            facet_grid(population ~ parameter)
+            facet_grid(population ~ parameter, scales = "free")
     #output_plot
     pdf('../output/figure_1b.pdf')
     print(output_plot)

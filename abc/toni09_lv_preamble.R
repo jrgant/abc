@@ -6,9 +6,6 @@ require(reshape2) # for reshape2::melt()
 require(deSolve) # for deSolve::lsoda()
 require(ggplot2) # only if plotting 
 
-# Turn on plotting?  
-DO_PLOTTING <- FALSE
-
 # Define sum of squared errors
 sse <- function(x, xd){
     return( sum((x - xd)^2))
@@ -55,9 +52,8 @@ true_soln <- as.data.frame(true_soln[-1,])
 sse(sample_data[,c("x", "y")], true_soln[,c("x", "y")])
 #>> [1] 4.313869
 
-
 # Plot the solution with sample points overlaid
-if (DO_PLOTTING){
+if (FALSE){
     png("../output/figure_1.png", width = 480, height = 480, res = 90)
     with(lv.df, plot(time, x, 
         col = 'grey', type = 'l', bty = 'n',
