@@ -23,7 +23,7 @@ Repressilator <- function(Time, State, Pars){
     
     with(as.list(c(State, Pars)), {
     
-    dm1 <- -m1 + alpha/(1+m3^n) + alpha0
+    dm1 <- -m1 + alpha/(1+p3^n) + alpha0
     dp1 <- -beta * (p1 - m1)
     dm2 <- -m2 + alpha/(1+p1^n) + alpha0
     dp2 <- -beta * (p2 - m2)
