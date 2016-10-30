@@ -113,7 +113,7 @@ while(t <= N.populations){
             Ks <- sapply(thetas, function(x) dK(x, theta_star_star))
             denominator <- sum(w * Ks)
             
-            weights[[t]][i] <- pi_theta * denominator
+            weights[[t]][i] <- pi_theta / denominator
         }
         cat("*", t, "/", i)
         i <- i + 1
