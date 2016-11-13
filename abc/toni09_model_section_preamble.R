@@ -150,7 +150,10 @@
     
     sigma_diag<-sigma^2*diag(length(sigma))
     
-    return(rmvnorm(1, mean = mean, sigma = sigma_diag))
+    perturbed<-rmvnorm(1, mean = mean, sigma = sigma_diag)
+    perturbed[1]<-ceiling(perturbed[1])
+    
+    return(perturbed)
   }
   
   make_par_vec<-function(t,m_star,theta_star){
