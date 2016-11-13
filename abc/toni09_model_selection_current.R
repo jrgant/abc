@@ -1,10 +1,6 @@
 #how can tau be continuous when our data time points are discrete?
 #tau prior is currently discrete tau_star<-ceiling(runif(1,-0.5,5))
 
-#S0 is being perturbed into being continuous...
-
-
-
 source('toni09_model_section_preamble.R')
 toni09_tdc_data <- read.csv("toni09_tdc_data.csv")
 
